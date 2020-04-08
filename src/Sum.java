@@ -2277,8 +2277,102 @@ public class Sum {
         return res.next;
     }
 
-//    //https://leetcode.com/problems/largest-rectangle-in-histogram/
-//    public int largestRectangleArea(int[] heights) {
-//
-//    }
+    //https://leetcode.com/problems/largest-rectangle-in-histogram/
+    public int largestRectangleArea(int[] heights) {
+        List<Integer> tmpMax = new ArrayList<Integer>();
+        for (int i = 0; i < heights.length; i++) {
+            if ((i == heights.length - 1) || heights[i] > heights[i + 1]) {
+                tmpMax.add(i);
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < tmpMax.size(); i++) {
+            int key = tmpMax.get(i);
+            int minH = heights[key];
+
+            for (int j = key; j >= 0; j--) {
+                minH = Math.min(minH, heights[j]);
+                int area = minH * (key - j + 1);
+                res = Math.max(res, area);
+            }
+        }
+        return res;
+    }
+
+    public int largestRectangleArea2(int[] heights) {
+        int maxarea = 0;
+        for (int i = 0; i < heights.length; i++) {
+            int minheight = Integer.MAX_VALUE;
+            for (int j = i; j < heights.length; j++) {
+                //从i到j中最矮的那个柱子才是这个区间的短板
+                minheight = Math.min(minheight, heights[j]);
+                //这个区间的最小是就是短板乘以这个区间的长度啊啊啊啊啊啊啊  => minheight * (j-i +1)
+                maxarea = Math.max(maxarea, minheight * (j - i + 1));
+            }
+        }
+        return maxarea;
+    }
+
+    //https://leetcode.com/problems/maximal-rectangle/
+    public int maximalRectangle(char[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][][] dp = new int[row][col][2];
+        if (matrix[0][0] == '1') {
+            dp[0][0] = new int[]{1, 1};
+        }
+
+        for (int i = 1; i < col; i++) {
+            char tmp = matrix[0][i];
+            if (tmp == '1') {
+                dp[0][i] = new int[]{dp[0][i - 1][0] + 1, 1};
+            }
+        }
+
+        for (int i = 1; i < row; i++) {
+            char tmp = matrix[i][0];
+            if (tmp == '1') {
+                dp[i][0] = new int[]{1, dp[i - 1][0][1] + 1};
+            }
+        }
+        int res = 0;
+
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                char tmp = matrix[i][j];
+                if (tmp == '1') {
+                    dp[i][j][0] = dp[i][j - 1][0] + 1;
+                    dp[i][j][1] = dp[i - 1][j][1] + 1;
+                }
+                res = Math.max(dp[i][j][0] * dp[i][j][1], res);
+            }
+        }
+        return res;
+    }
+
+    public int maximalRectangle2(char[][] matrix) {
+
+        if (matrix.length == 0) return 0;
+        int maxarea = 0;
+        int[][] dp = new int[matrix.length][matrix[0].length];
+
+        for(int i = 0; i < matrix.length; i++){
+            for(int j = 0; j < matrix[0].length; j++){
+                if (matrix[i][j] == '1'){
+
+                    // compute the maximum width and update dp with it
+                    dp[i][j] = j == 0? 1 : dp[i][j-1] + 1;
+
+                    int width = dp[i][j];
+
+                    // compute the maximum area rectangle with a lower right corner at [i, j]
+                    for(int k = i; k >= 0; k--){
+                        width = Math.min(width, dp[k][j]);
+                        maxarea = Math.max(maxarea, width * (i - k + 1));
+                    }
+                }
+            }
+        }
+        return maxarea;
+    }
 }
