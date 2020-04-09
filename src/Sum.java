@@ -2356,17 +2356,17 @@ public class Sum {
         int maxarea = 0;
         int[][] dp = new int[matrix.length][matrix[0].length];
 
-        for(int i = 0; i < matrix.length; i++){
-            for(int j = 0; j < matrix[0].length; j++){
-                if (matrix[i][j] == '1'){
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == '1') {
 
                     // compute the maximum width and update dp with it
-                    dp[i][j] = j == 0? 1 : dp[i][j-1] + 1;
+                    dp[i][j] = j == 0 ? 1 : dp[i][j - 1] + 1;
 
                     int width = dp[i][j];
 
                     // compute the maximum area rectangle with a lower right corner at [i, j]
-                    for(int k = i; k >= 0; k--){
+                    for (int k = i; k >= 0; k--) {
                         width = Math.min(width, dp[k][j]);
                         maxarea = Math.max(maxarea, width * (i - k + 1));
                     }
@@ -2374,5 +2374,114 @@ public class Sum {
             }
         }
         return maxarea;
+    }
+
+    //https://leetcode.com/problems/partition-list/
+    public ListNode partition(ListNode head, int x) {
+        ListNode left = new ListNode(-1);
+        ListNode leftTmp = left;
+
+        ListNode right = new ListNode(-1);
+        ListNode rightTmp = right;
+
+        ListNode tmp = head;
+        while (tmp != null) {
+            int val = tmp.val;
+            if (val < x) {
+                leftTmp.next = new ListNode(val);
+                leftTmp = leftTmp.next;
+            } else {
+                rightTmp.next = new ListNode(val);
+                rightTmp = rightTmp.next;
+            }
+            tmp = tmp.next;
+        }
+
+        leftTmp.next = right.next;
+        return left.next;
+    }
+
+    //https://leetcode.com/problems/scramble-string/
+    //这是一个错误的答案,260 / 283 test cases passed.
+    //比如s1="abcd",s2="cabd",会return false
+    public boolean isScramble(String s1, String s2) {
+        if (s1.equals(s2)) {
+            return true;
+        }
+        if (s1.length() == 2) {
+            if (s1.charAt(0) == s2.charAt(1) && s1.charAt(1) == s2.charAt(0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //找到切分的点
+        //这个思路有问题，切分的点不一定是这个index,
+        // 比如s1="abcd",s2="cabd",用下面的思路，会从a这个切分点找， 会return false
+        //实际上，以c为切分点，得return true
+        int index = 0;
+        for (; index < s1.length(); index++) {
+            if (s2.charAt(index) == s1.charAt(0) && index != s1.length() - 1
+                    && isScramble(s1.substring(0, index + 1), s2.substring(0, index + 1))
+                    && isScramble(s1.substring(index + 1), s2.substring(index + 1))) {
+                return true;
+            }
+
+            if (s2.charAt(index) == s1.charAt(0) && index != 0
+                    && isScramble(s1.substring(0, s1.length() - index), s2.substring(index))
+                    && isScramble(s1.substring(s1.length() - index), s2.substring(0, index))) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public boolean isScramble2(String s1, String s2) {
+        if (s1.equals(s2)) {
+            return true;
+        }
+
+        if (s1.length() == 2) {
+            if (s1.charAt(0) == s2.charAt(1) && s1.charAt(1) == s2.charAt(0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        for (int index = 0; index < s1.length(); index++) {
+            if (index != s1.length() - 1
+                    && isScramble(s1.substring(0, index + 1), s2.substring(0, index + 1))
+                    && isScramble(s1.substring(index + 1), s2.substring(index + 1))) {
+                return true;
+            }
+
+            if (index != 0
+                    && isScramble(s1.substring(0, s1.length() - index), s2.substring(index))
+                    && isScramble(s1.substring(s1.length() - index), s2.substring(0, index))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //https://leetcode.com/problems/merge-sorted-array/
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int length = m + n;
+        while (m >= 1 && n >= 1) {
+            if (nums1[m - 1] >= nums2[n - 1]) {
+                nums1[m + n - 1] = nums1[m - 1];
+                m--;
+            } else {
+                nums1[m + n - 1] = nums2[n - 1];
+                n--;
+            }
+        }
+        while (n >= 1) {
+            nums1[n - 1] = nums2[n - 1];
+            n--;
+        }
     }
 }
