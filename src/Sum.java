@@ -2484,4 +2484,99 @@ public class Sum {
             n--;
         }
     }
+
+    //https://leetcode.com/problems/subsets-ii/
+//    Input: [1,2,2]
+//    Output:
+//            [
+//            [2],
+//            [1],
+//            [1,2,2],
+//            [2,2],
+//            [1,2],
+//            []
+//            ]
+    /*
+    input:[1,2,3]
+    [1],
+    [2],
+     */
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        List<Integer> out = new ArrayList<Integer>();
+        int k = 0;
+        subsetWithDupHelper(nums, k, out, res);
+        return res;
+    }
+
+    public void subsetWithDupHelper(int[] nums, int level, List<Integer> out, List<List<Integer>> res) {
+
+
+        res.add(new ArrayList<Integer>(out));
+        if (out.size() == nums.length) {
+            return;
+        }
+
+        for (int i = level; i < nums.length; i++) {
+            out.add(nums[i]);
+            subsetWithDupHelper(nums, i + 1, out, res);
+            out.remove(out.size() - 1);
+
+            while (i + 1 < nums.length && nums[i] == nums[i + 1]) {
+                i++;
+            }
+        }
+    }
+
+    //https://leetcode.com/problems/decode-ways/
+    // 超时啊啊啊啊啊，太长了就超时
+    public int numDecodings(String s) {
+        List<String> out = new ArrayList<String>();
+        List<List<String>> res = new ArrayList<List<String>>();
+        numDecodeHelper(s, out, res);
+        return res.size();
+    }
+
+    public void numDecodeHelper(String s, List<String> out, List<List<String>> res) {
+        if (s.length() == 0) {
+            res.add(new ArrayList<String>(out));
+            return;
+        }
+
+        //1个
+        String tmp = s.substring(0, 1);
+        int foo = Integer.parseInt(tmp);
+        if (foo == 0) {
+            return;
+        }
+
+        out.add(tmp);
+        numDecodeHelper(s.substring(1), out, res);
+        out.remove(out.size() - 1);
+
+        if (s.length() >= 2) {
+            tmp = s.substring(0, 2);
+            foo = Integer.parseInt(tmp);
+            if (foo > 26) {
+                return;
+            }
+            out.add(tmp);
+            numDecodeHelper(s.substring(2), out, res);
+            out.remove(out.size() - 1);
+        }
+    }
+
+    public int numDecodings2(String s) {
+        if (s.isEmpty() || s.charAt(0) == '0') return 0;
+        int[] dp = new int[s.length() + 1];
+        dp[0] = 1;
+        for (int i = 1; i < dp.length; ++i) {
+            dp[i] = (s.charAt(i - 1) == '0') ? 0 : dp[i - 1];
+            if (i > 1 && (s.charAt(i - 2) == '1' || (s.charAt(i - 2) == '2' && s.charAt(i - 1) <= '6'))) {
+                dp[i] += dp[i - 2];
+            }
+        }
+        return dp[s.length()];
+    }
 }
