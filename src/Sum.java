@@ -2579,4 +2579,92 @@ public class Sum {
         }
         return dp[s.length()];
     }
+
+    //https://leetcode.com/problems/reverse-linked-list-ii/
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        ListNode res = new ListNode(-1);
+        res.next = head;
+        ListNode slow = res;
+
+        int cnt = 0;
+        while (cnt < m - 1) {
+            slow = slow.next;
+            cnt++;
+        }
+        ListNode curr = slow.next;
+
+        //开始类似于插入的形式变化
+        while (cnt < n - 1 && curr.next != null) {
+            ListNode tmp = slow.next;//注意，curr会一直往后走，所以curr不恒等于slow.next
+            //example :  1->2->3->4->5
+            //变成1->3->2->4->5
+            slow.next = curr.next;
+            curr.next = curr.next.next;
+            slow.next.next = tmp;
+            cnt++;
+        }
+        return res.next;
+    }
+
+    //https://leetcode.com/problems/restore-ip-addresses/submissions/
+    public List<String> restoreIpAddresses(String s) {
+        List<String> out = new ArrayList<String>();
+        List<String> res = new ArrayList<String>();
+
+        restoreIpHelper(s, out, res);
+        return res;
+    }
+
+    public void restoreIpHelper(String s, List<String> out, List<String> res) {
+
+        if (out.size() == 4 && !s.equals("")) {
+            return;
+        }
+
+        if (s.equals("") && out.size() != 4) {
+            return;
+        }
+
+        if (s.equals("") && out.size() == 4) {
+            String tmp = "";
+            for (String qq : out) {
+                tmp += qq + ".";
+            }
+            tmp = tmp.substring(0, tmp.length() - 1);
+            res.add(tmp);
+            return;
+        }
+
+
+        //1个
+        out.add(s.substring(0, 1));
+        restoreIpHelper(s.substring(1), out, res);
+        out.remove(out.size() - 1);
+
+        //开头为0的
+        //不可能出现01.122.123.123
+        //但是可以出现0.1.2.3
+        if (s.startsWith("0")) {
+            return;
+        }
+
+        //2个
+        if (s.length() >= 2) {
+
+            out.add(s.substring(0, 2));
+            restoreIpHelper(s.substring(2), out, res);
+            out.remove(out.size() - 1);
+        }
+
+        //3个
+        if (s.length() >= 3) {
+            String tmp = s.substring(0, 3);
+            if (Integer.parseInt(tmp) > 255) {
+                return;
+            }
+            out.add(s.substring(0, 3));
+            restoreIpHelper(s.substring(3), out, res);
+            out.remove(out.size() - 1);
+        }
+    }
 }
