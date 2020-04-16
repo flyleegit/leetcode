@@ -2667,4 +2667,169 @@ public class Sum {
             out.remove(out.size() - 1);
         }
     }
+
+    //https://leetcode.com/problems/binary-tree-inorder-traversal/
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        inorderHelper(root, res);
+        return res;
+    }
+
+    public void inorderHelper(TreeNode root, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+        inorderHelper(root.left, res);
+        res.add(root.val);
+        inorderHelper(root.right, res);
+    }
+
+    //https://leetcode.com/problems/unique-binary-search-trees-ii/
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) {
+            return new LinkedList<TreeNode>();
+        }
+        return generate_trees(1, n);
+    }
+
+    public LinkedList<TreeNode> generate_trees(int start, int end) {
+        LinkedList<TreeNode> all_trees = new LinkedList<TreeNode>();
+        if (start > end) {
+            all_trees.add(null);
+            return all_trees;
+        }
+
+        // pick up a root
+        for (int i = start; i <= end; i++) {
+            // all possible left subtrees if i is choosen to be a root
+            LinkedList<TreeNode> left_trees = generate_trees(start, i - 1);
+
+            // all possible right subtrees if i is choosen to be a root
+            LinkedList<TreeNode> right_trees = generate_trees(i + 1, end);
+
+            // connect left and right trees to the root i
+            for (TreeNode l : left_trees) {
+                for (TreeNode r : right_trees) {
+                    TreeNode current_tree = new TreeNode(i);
+                    current_tree.left = l;
+                    current_tree.right = r;
+                    all_trees.add(current_tree);
+                }
+            }
+        }
+        return all_trees;
+    }
+
+    public int numTrees(int n) {
+        List<TreeNode> res = new ArrayList<TreeNode>();
+        return numTreesHelper(1, n).size();
+    }
+
+    public List<TreeNode> numTreesHelper(int start, int end) {
+        List<TreeNode> res = new ArrayList<TreeNode>();
+        if (start > end) {
+            res.add(null);
+            return res;
+        }
+
+        for (int i = start; i <= end; i++) {
+            ListNode root = new ListNode(i);
+            List<TreeNode> leftList = numTreesHelper(start, i - 1);
+            List<TreeNode> rightList = numTreesHelper(i + 1, end);
+
+            for (TreeNode left : leftList) {
+                for (TreeNode right : rightList) {
+                    TreeNode tmp = new TreeNode(root.val);
+                    tmp.left = left;
+                    tmp.right = right;
+                    res.add(tmp);
+                }
+            }
+        }
+        return res;
+    }
+
+    public int numTrees2(int n) {
+        int[] G = new int[n + 1];
+        G[0] = 1;
+        G[1] = 1;
+
+        for (int i = 2; i <= n; ++i) {
+            for (int j = 1; j <= i; ++j) {
+                G[i] += G[j - 1] * G[i - j];
+            }
+        }
+        return G[n];
+    }
+
+    //https://leetcode.com/problems/same-tree/
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+
+        if (p == null || q == null) {
+            return false;
+        }
+
+        return p.val == q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+
+    //https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        //先序:  根->左->右
+        //中序：左->根->右
+        if (preorder.length == 0) {
+            return null;
+        }
+        int rootVal = preorder[0];
+        TreeNode root = new TreeNode(rootVal);
+        int index; //中序遍历root的index
+        for (index = 0; index < inorder.length; index++) {
+            if (inorder[index] == rootVal) {
+                break;
+            }
+        }
+
+        root.left = buildTree(Arrays.copyOfRange(preorder, 1, index + 1), Arrays.copyOfRange(inorder, 0, index));
+        root.right = buildTree(Arrays.copyOfRange(preorder, index + 1, preorder.length), Arrays.copyOfRange(inorder, index + 1, inorder.length));
+        return root;
+    }
+
+    //https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        if (root == null) {
+            return res;
+        }
+
+        queue.offer(root);
+        int cnt = 0;
+        while (!queue.isEmpty()) {
+            List<Integer> out = new ArrayList<Integer>();
+            for (int i = queue.size(); i > 0; i--) {
+                TreeNode tmp = queue.poll();
+                out.add(tmp.val);
+                if (tmp.left != null) {
+                    queue.offer(tmp.left);
+                }
+                if (tmp.right != null) {
+                    queue.offer(tmp.right);
+                }
+            }
+            List<Integer> tmp = new ArrayList<Integer>();
+
+            if (cnt % 2 == 1) {
+                for (int i = out.size() - 1; i >= 0; i--) {
+                    tmp.add(out.get(i));
+                }
+            } else {
+                tmp = new ArrayList<Integer>(out);
+            }
+            res.add(tmp);
+            cnt++;
+        }
+        return res;
+    }
 }
