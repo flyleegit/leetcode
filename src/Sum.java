@@ -2832,4 +2832,150 @@ public class Sum {
         }
         return res;
     }
+
+    //https://leetcode.com/problems/interleaving-string/
+    //这方法超时，超时，超时，超时
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s1.isEmpty() && s2.isEmpty() && s3.isEmpty()) {
+            return true;
+        }
+        //s3 为空，但是其他两个不为空，返回false
+        if (s3.isEmpty()) {
+            return false;
+        }
+        if (!s1.isEmpty() && s1.charAt(0) == s3.charAt(0)) {
+            if (isInterleave(s1.substring(1), s2, s3.substring(1))) {
+                return true;
+            }
+        }
+
+        if (!s2.isEmpty() && s2.charAt(0) == s3.charAt(0)) {
+            if (isInterleave(s1, s2.substring(1), s3.substring(1))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isInterleave2(String s1, String s2, String s3) {
+        int memo[][] = new int[s1.length()][s2.length()];
+        for (int i = 0; i < s1.length(); i++) {
+            for (int j = 0; j < s2.length(); j++) {
+                memo[i][j] = -1;
+            }
+        }
+        return is_Interleave(s1, 0, s2, 0, s3, 0, memo);
+    }
+
+    public boolean is_Interleave(String s1, int i, String s2, int j, String s3, int k, int[][] memo) {
+        if (i == s1.length()) {
+            return s2.substring(j).equals(s3.substring(k));
+        }
+        if (j == s2.length()) {
+            return s1.substring(i).equals(s3.substring(k));
+        }
+        if (memo[i][j] >= 0) {
+            return memo[i][j] == 1 ? true : false;
+        }
+        boolean ans = false;
+        if (s3.charAt(k) == s1.charAt(i) && is_Interleave(s1, i + 1, s2, j, s3, k + 1, memo)
+                || s3.charAt(k) == s2.charAt(j) && is_Interleave(s1, i, s2, j + 1, s3, k + 1, memo)) {
+            ans = true;
+        }
+        memo[i][j] = ans ? 1 : 0;
+        return ans;
+    }
+
+    //https://leetcode.com/problems/recover-binary-search-tree/
+    //官方默认推荐的O(n)额外空间，当然后面的follow up官方希望我们用O(1)的额外空间
+    //支持各种调换顺序，只要这个搜索树调换过顺序，都可以用这个方法
+    public void recoverTree(TreeNode root) {
+        List<TreeNode> list = new ArrayList<TreeNode>();
+        List<Integer> vals = new ArrayList<Integer>();
+        inorder(root, list, vals);
+        Collections.sort(vals);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).val = vals.get(i);
+        }
+    }
+
+    public void inorder(TreeNode root, List<TreeNode> list, List<Integer> vals) {
+        if (root == null) {
+            return;
+        }
+
+        inorder(root.left, list, vals);
+        list.add(root);
+        vals.add(root.val);
+        inorder(root.right, list, vals);
+    }
+
+    //https://leetcode.com/problems/symmetric-tree/
+    //层次遍历，然后每一层看是不是镜子
+    public boolean isSymmetric(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            List<Integer> list = new ArrayList<Integer>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode tmp = queue.poll();
+                if (tmp != null) {
+                    queue.offer(tmp.left);
+                    queue.offer(tmp.right);
+                    list.add(tmp.val);
+                } else {
+                    list.add(null);
+                }
+
+            }
+            int i = 0, j = list.size() - 1;
+            while (i <= j) {
+                if (list.get(i++) != list.get(j--)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //递归
+    public boolean isSymmetric2(TreeNode root) {
+        return isMirror(root, root);
+    }
+
+    public boolean isMirror(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return true;
+        if (t1 == null || t2 == null) return false;
+        return (t1.val == t2.val)
+                && isMirror(t1.right, t2.left)
+                && isMirror(t1.left, t2.right);
+    }
+
+    //类似于sameTree的队列
+    public boolean isSymmetric3(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(root);
+        while (!q.isEmpty()) {
+            TreeNode t1 = q.poll();
+            TreeNode t2 = q.poll();
+            if (t1 == null && t2 == null) continue;
+            if (t1 == null || t2 == null) return false;
+            if (t1.val != t2.val) return false;
+            q.add(t1.left);
+            q.add(t2.right);
+            q.add(t1.right);
+            q.add(t2.left);
+        }
+        return true;
+    }
+
+    //https://leetcode.com/problems/maximum-depth-of-binary-tree/
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
 }
