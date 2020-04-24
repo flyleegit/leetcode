@@ -2978,4 +2978,316 @@ public class Sum {
         }
         return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
     }
+
+    //https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayHelper(nums, 0, nums.length - 1);
+    }
+
+    public TreeNode sortedArrayHelper(int[] nums, int start, int end) {
+
+        if (start > end) {
+            return null;
+        }
+        int mid = start + (end - start) / 2;
+
+        TreeNode root = new TreeNode(nums[mid]);
+
+        root.left = sortedArrayHelper(nums, start, mid - 1);
+
+        root.right = sortedArrayHelper(nums, mid + 1, end);
+        return root;
+    }
+
+    //https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        ListNode pre = new ListNode(-1);
+        pre.next = head;
+        ListNode midLink = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            pre = midLink;
+            midLink = midLink.next;
+        }
+
+        TreeNode root = new TreeNode(midLink.val);
+        pre.next = null;
+        root.right = sortedListToBST(midLink.next);
+        if (midLink == head) {
+            head = null;
+        }
+        root.left = sortedListToBST(head);
+        return root;
+    }
+
+    //https://leetcode.com/problems/minimum-depth-of-binary-tree/
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        if (root.left == null) {
+            return 1 + minDepth(root.right);
+        }
+
+        if (root.right == null) {
+            return 1 + minDepth(root.left);
+        }
+        return 1 + Math.min(minDepth(root.left), minDepth(root.right));
+    }
+
+    //https://leetcode.com/problems/path-sum/
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return false;
+        }
+        int rootVal = root.val;
+
+        if (rootVal == sum && root.left == null && root.right == null) {
+            return true;
+        }
+        return hasPathSum(root.left, sum - rootVal) || hasPathSum(root.right, sum - rootVal);
+    }
+
+    //https://leetcode.com/problems/path-sum-ii/
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<Integer> out = new ArrayList<Integer>();
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        pathSumHelper(root, sum, out, res);
+        return res;
+
+    }
+
+    public void pathSumHelper(TreeNode root, int sum, List<Integer> out, List<List<Integer>> res) {
+        if (root == null) {
+            return;
+        }
+        int rootVal = root.val;
+        if (rootVal == sum && root.left == null && root.right == null) {
+            out.add(root.val);
+            res.add(new ArrayList<Integer>(out));
+            out.remove(out.size() - 1);
+            return;
+        }
+        out.add(rootVal);
+        pathSumHelper(root.left, sum - rootVal, out, res);
+        pathSumHelper(root.right, sum - rootVal, out, res);
+        out.remove(out.size() - 1);
+    }
+
+    //https://www.cnblogs.com/grandyang/p/9615871.html
+    //https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/solution/mian-shi-ti-36-er-cha-sou-suo-shu-yu-shuang-xian-5/
+    TreeNode pre, head;
+
+    public TreeNode treeToDoublyList(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        dfs(root);
+        //这两句话把这个链表变成了一个环，可能题目这么要求？
+        head.left = pre;
+        pre.right = head;
+        return head;
+    }
+
+    //TreeNode没法引用传递，需要一个全局变量
+    public void dfs(TreeNode cur) {
+        if (cur == null) {
+            return;
+        }
+        //中序遍历，先找到最左的叶子节点
+        dfs(cur.left);
+
+        //pre表示迭代后双向链表的尾节点
+        if (pre != null) {
+            pre.right = cur;
+        } else {
+            //head表示变成双向链表的头节点
+            //当pre为空，表明这是整棵树的最左边那个叶子节点，
+            head = cur;
+        }
+        cur.left = pre;
+        pre = cur;
+
+        dfs(cur.right);
+    }
+
+    //https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+    //what i wanna say is "F***k"
+    //二叉树先序遍历变变变变变变变
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        flatten(root.left);
+
+        flatten(root.right);
+
+        TreeNode tmp = root.right;
+        root.right = root.left;
+        root.left = null;
+        while (root.right != null) {
+            root = root.right;
+        }
+        root.right = tmp;
+    }
+
+    //https://leetcode.com/problems/distinct-subsequences/
+    public int numDistinct(String s, String t) {
+        //递推公式
+        //dp[i][j] = dp[i][j - 1] + (T[i - 1] == S[j - 1] ? dp[i - 1][j - 1] : 0)
+
+        int[][] dp = new int[t.length() + 1][s.length() + 1];
+
+        //空字符串是任何字符串的子串
+        for (int j = 0; j < s.length() + 1; j++) {
+            dp[0][j] = 1;
+        }
+
+        for (int i = 1; i < t.length() + 1; i++) {
+            for (int j = 1; j < s.length() + 1; j++) {
+
+                if (t.charAt(i - 1) == s.charAt(j - 1)) {
+
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i][j - 1];
+                } else {
+                    //因为s新增的一位字符不等于t新增的一位，
+                    //所以并没有对子字符串带来新的可能性
+                    //所以个数就以左边那个值为准(s减少了一位，t没变)
+                    dp[i][j] = dp[i][j - 1];
+                }
+            }
+        }
+        return dp[t.length()][s.length()];
+    }
+
+    //https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.offer(root);
+        Node pre = new Node();
+        while (queue.size() > 0) {
+
+            int size = queue.size();
+            int i = size - 1;
+
+            while (i >= 0) {
+                Node tmp = queue.poll();
+
+                if (i == (size - 1)) {
+                    pre = tmp;
+                } else {
+                    pre.next = tmp;
+                    pre = pre.next;
+
+                }
+                if (tmp.left != null) {
+                    queue.offer(tmp.left);
+                    queue.offer(tmp.right);
+                }
+                i--;
+            }
+        }
+        return root;
+    }
+
+    //https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
+    //不一样的地方在于，这个可能是个非完全二叉树
+    public Node connect2(Node root) {
+        if (root == null) {
+            return root;
+        }
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.offer(root);
+        Node pre = new Node();
+        while (queue.size() > 0) {
+
+            int size = queue.size();
+            int i = size - 1;
+
+            while (i >= 0) {
+                Node tmp = queue.poll();
+
+                if (i == (size - 1)) {
+                    pre = tmp;
+                } else {
+                    pre.next = tmp;
+                    pre = pre.next;
+
+                }
+                if (tmp.left != null) {
+                    queue.offer(tmp.left);
+                }
+
+                if (tmp.right != null) {
+                    queue.offer(tmp.right);
+                }
+                i--;
+            }
+        }
+        return root;
+    }
+
+    //https://leetcode.com/problems/triangle/
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int row = triangle.size();
+        int res = 0;
+        if (row <= 0) {
+            return res;
+        }
+        int[][] dp = new int[row][triangle.get(row - 1).size()];
+        dp[0][0] = triangle.get(0).get(0);
+        for (int tmp = 1; tmp < dp.length; tmp++) {
+            dp[tmp][0] = dp[tmp - 1][0] + triangle.get(tmp).get(0);
+        }
+        res = dp[row - 1][0];
+        for (int i = 1; i < dp.length; i++) {
+
+            for (int j = 1; j < triangle.get(i).size(); j++) {
+                if (j > i-1) {//此时i,j在最右边
+                    dp[i][j] = dp[i - 1][j - 1] + triangle.get(i).get(j);
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + triangle.get(i).get(j);
+                }
+
+                if (i == row - 1) {
+                    res = Math.min(res, dp[i][j]);
+                }
+            }
+        }
+        return res;
+    }
+
 }
+
+
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {
+    }
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+}
+
