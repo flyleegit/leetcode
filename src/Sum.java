@@ -3252,7 +3252,7 @@ public class Sum {
         for (int i = 1; i < dp.length; i++) {
 
             for (int j = 1; j < triangle.get(i).size(); j++) {
-                if (j > i-1) {//此时i,j在最右边
+                if (j > i - 1) {//此时i,j在最右边
                     dp[i][j] = dp[i - 1][j - 1] + triangle.get(i).get(j);
                 } else {
                     dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j]) + triangle.get(i).get(j);
@@ -3266,6 +3266,223 @@ public class Sum {
         return res;
     }
 
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+    public int maxProfit(int[] prices) {
+        int minprice = Integer.MAX_VALUE;
+        int maxprofit = 0;
+        for (int i = 0; i <= prices.length; i++) {
+            if (prices[i] < minprice) {
+                minprice = prices[i];
+            } else if ((prices[i] - minprice) > maxprofit) {
+                maxprofit = prices[i] - minprice;
+            }
+        }
+        return maxprofit;
+    }
+
+    //另一种解法
+//    public int maxProfit(int[] prices) {
+//        int res = 0, buy = Integer.MAX_VALUE;
+//        for (int i = 0; i < prices.length; i++) {
+//            int price = prices[i];
+//            buy = Math.min(buy, price);
+//            res = Math.max(res, price - buy);
+//        }
+//        return res;
+//    }
+
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+    public int maxProfit2(int[] prices) {
+        int maxprofit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1])
+                maxprofit += prices[i] - prices[i - 1];
+        }
+        return maxprofit;
+    }
+
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/
+    //有点难，后面再看
+//    public int maxProfit3(int[] prices) {
+//        if (prices.length == 0) {
+//            return 0;
+//        }
+//
+//        int n = prices.length;
+//        int[][] g = new int[n][3];//到达第i天时最多可进行j此交易的最大利润，全局
+//
+//        int[][] l = new int[n][3];//到达第i天时最多可进行j次交易，并且最后一次交易在最后一天卖出的最大利润（局部最优解）
+//
+//        //递推公式
+//        /**
+//         //局部最优解是相比前一天交易
+//         l[i][j] = max(g[i-1][j-1]) + max(diff,0),l[i-1][j] + diff)
+//         g[i][j] = max(l[i][j],g[i-1][j])
+//         */
+//
+//        for (int i = 1; i < prices.length; i++) {
+//            int diff = prices[i] - prices[i - 1];
+//            for (int j = 1; j <= 2; j++) {
+//                l[i][j] = Math.max(g[i - 1][j - 1] + Math.max(diff, 0), l[i - 1][j] + diff);
+//
+//                g[i][j] = Math.max(l[i][j], g[i - 1][j]);
+//            }
+//        }
+//
+//        return g[n-1][2]
+//    }
+
+    //https://leetcode.com/problems/binary-tree-maximum-path-sum/
+
+    int maxDepthRes = Integer.MIN_VALUE;//初始化全局变量，结果为一个最小值
+
+    public int maxPathSum(TreeNode root) {
+        maxPathSumHelper(root);
+        return maxDepthRes;
+    }
+
+    //注意，第一点：以root为根节点的二叉树，计算最大path，可能经过root节点，也可能不经过root节点
+
+    //解释解释，解释这个function
+    //这个function是计算 以root为根节点，且经过root节点的path的最大值
+    //注意这个function的return是不能以root为根节点形成半环的
+    //也就是说  只能是  max(function(root.left),function(root.right)) + root.val
+
+    //所以在计算的过程中，有个全局变量maxDepthRes来算最终的最大值，
+    // 因为：最大path，可能经过root节点，也可能不经过root节点
+    public int maxPathSumHelper(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        //递归调用左子树的最大值
+        int left = Math.max(maxPathSumHelper(root.left), 0);
+
+        ////递归调用右子树的最大值
+        int right = Math.max(maxPathSumHelper(root.right), 0);
+
+        //left + right + root.val  这个很有意思
+        //这个值就是以root为衔接点的半环最大值
+        maxDepthRes = Math.max(maxDepthRes, left + right + root.val);
+
+        return Math.max(left, right) + root.val;
+    }
+
+    //https://leetcode.com/problems/valid-palindrome/
+    public boolean isPalindrome(String s) {
+        int l = 0;
+        int r = s.length() - 1;
+        while (l <= r) {
+            char ll = Character.toLowerCase(s.charAt(l));
+            char rr = Character.toLowerCase(s.charAt(r));
+
+            //不是a~z
+            if (ll < 97 || ll > 122) {
+                l++;
+                continue;
+            }
+
+            //不是a~z
+            if (rr < 97 || rr > 122) {
+                r--;
+                continue;
+            }
+
+
+            if (ll != rr) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    //https://leetcode.com/problems/word-ladder/
+    //DFS 这方法超时~  超时，超时，超时
+    int minLen = Integer.MAX_VALUE;
+
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        int len = wordList.size();
+        int[] visited = new int[len];
+        ladderLengthHelper(beginWord, endWord, visited, wordList, 0);
+        return minLen == Integer.MAX_VALUE ? 0 : minLen + 1;
+    }
+
+    public void ladderLengthHelper(String word1, String endWord, int[] visited, List<String> wordList, int cnt) {
+        if (word1.equals(endWord)) {
+            minLen = Math.min(minLen, cnt);
+            return;
+        }
+        int len = wordList.size();
+
+        for (int i = 0; i < len; i++) {
+            if (visited[i] == 1) {
+                continue;
+            }
+            String word = wordList.get(i);
+
+            if (!compareMatch(word1, word)) {
+                continue;
+            }
+            visited[i] = 1;
+            ladderLengthHelper(word, endWord, visited, wordList, cnt + 1);
+            visited[i] = 0;
+        }
+    }
+
+    //判断两个字符串是不是就差一个char
+    public boolean compareMatch(String word1, String word2) {
+        int len = word1.length();
+        int cnt = 0;
+        for (int i = 0; i < len; i++) {
+
+            if (word1.charAt(i) != word2.charAt(i)) {
+                cnt++;
+            }
+
+            if (cnt >= 2) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //BFS, 核心逻辑是用a~z一个一个去替换单词中的字母，可能换到某一个就中了
+    //不用DFS一路走到黑
+    public int ladderLength2(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<String>(wordList);
+        Queue<String> wordQueue = new LinkedList<String>();
+        wordQueue.offer(beginWord);
+        int res = 0;
+        while (!wordQueue.isEmpty()) {
+            //先算这一层的字符串
+            for (int k = wordQueue.size(); k > 0; k--) {
+                String word = wordQueue.poll();
+                //挺有意思，找最小，一层一层找，第一个找到的一定是最小的
+                if (word.equals(endWord)) {
+                    return res + 1;
+                }
+
+                for (int i = 0; i < word.length(); i++) {
+                    char[] newWord = word.toCharArray();
+                    //把第i个字符替换为"a~z",看哪个符合查找预期
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
+                        newWord[i] = ch;
+                        String newnewWord = new String(newWord);
+
+                        //变换后的子串在wordList中，且还没有到达最终结果，需要继续往queue里面push
+                        if (set.contains(newnewWord) && newnewWord != word) {
+                            wordQueue.offer(newnewWord);
+                            set.remove(newnewWord);
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return 0;
+    }
 }
 
 
