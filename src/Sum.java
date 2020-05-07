@@ -3483,6 +3483,64 @@ public class Sum {
         }
         return 0;
     }
+
+    //https://leetcode.com/problems/game-of-life/
+    //这题出的有点莫名其妙， 当前的细胞变完之后，理论上是可以影响周围的细胞变换的
+    public void gameOfLife(int[][] board) {
+        //-1代表过去活，现在死
+        //2代表过去死，现在活
+        int[] neighbors = {0, 1, -1};
+
+        int rows = board.length;
+        int cols = board[0].length;
+
+        //遍历每一个格子里面的细胞
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+
+                //统计每个细胞八个相邻位置的活细胞数量
+                int liveNeighbors = 0;
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        //只算周围8个，当i,j都为0的时候，表明为
+                        if (!(neighbors[i] == 0 && neighbors[j] == 0)) {
+                            //相邻位置坐标
+                            int r = (row + neighbors[i]);
+                            int c = (col + neighbors[j]);
+
+                            if ((r < rows && r >= 0) && (c < cols && c >= 0) && (Math.abs(board[r][c]) == 1)) {
+                                liveNeighbors += 1;
+                            }
+                        }
+                    }
+                }
+
+                //规则1或者规则3
+                if ((board[row][col] == 1) && (liveNeighbors < 2 || liveNeighbors > 3)) {
+                    //-1 过去是活的，现在是死的
+                    board[row][col] = -1;
+                }
+
+                //规则4
+                if (board[row][col] == 0 && liveNeighbors == 3) {
+                    //2代表这个细胞过去是死的现在活了
+                    board[row][col] = 2;
+                }
+            }
+        }
+
+        // 遍历 board 得到一次更新后的状态
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+
+                if (board[row][col] > 0) {
+                    board[row][col] = 1;
+                } else {
+                    board[row][col] = 0;
+                }
+            }
+        }
+    }
 }
 
 
