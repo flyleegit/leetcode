@@ -1,6 +1,7 @@
 
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 //一生不识N-Sum，刷尽天下也枉然
 public class Sum {
@@ -3540,6 +3541,62 @@ public class Sum {
                 }
             }
         }
+    }
+
+    //https://leetcode.com/problems/longest-consecutive-sequence/
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<Integer>();
+
+        for (int num : nums) {
+            set.add(num);
+        }
+
+        int longestStreak = 0;
+
+        for (int num : set) {
+
+            //如果set里面有num-1，那么这个num一定不是最长序列的起始数字
+            if (set.contains(num - 1)) {
+                continue;
+            }
+
+            //找到起始数字
+            int currentNum = num;
+            int currentStreak = 1;
+
+            while (set.contains(currentNum + 1)) {
+                currentNum += 1;
+                currentStreak += 1;
+            }
+            longestStreak = Math.max(longestStreak, currentStreak);
+        }
+        return longestStreak;
+    }
+
+    //https://leetcode.com/problems/longest-substring-without-repeating-characters/
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<Character>();
+
+        int n = s.length();
+
+        //rk为右指针
+        int rk = -1, ans = 0;
+        for (int i = 0; i < n; i++) {
+            //左窗口右移一下
+            //解释解释：只要走到for循环，就是右指针已经走完了，即右指针的下一个一定是重复字符了
+            if (i != 0) {
+                set.remove(s.charAt(i - 1));
+            }
+
+            //如果右指针下一个字符不在set中，则一直右移动指针
+            while (rk < n - 1 && !set.contains(s.charAt(rk + 1))) {
+                set.add(s.charAt(rk + 1));
+                rk++;
+            }
+
+            ans = Math.max(ans, rk - i + 1);
+        }
+        return ans;
     }
 }
 
