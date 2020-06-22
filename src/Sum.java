@@ -3598,6 +3598,75 @@ public class Sum {
         }
         return ans;
     }
+
+
+    public int lengthOfLongestSubstring2(String s) {
+        int res = 0;
+        HashSet<Character> set = new HashSet<Character>();
+        int start = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char tmp = s.charAt(i);
+
+            //hash内部一直是没有重复的
+            if (!set.contains(tmp)) {
+                res = Math.max(res, i - start + 1);
+                set.add(tmp);
+                continue;
+            }
+
+            while (start <= i) {
+
+                char tmp2 = s.charAt(start);
+                start++;
+                if (tmp2 == tmp) {
+                    break;
+                }
+                set.remove(tmp2);
+            }
+        }
+        return res;
+    }
+
+    //https://leetcode.com/problems/number-of-islands/
+    public int numIslands(char[][] grid) {
+        int rows = grid.length;
+        if (rows <= 0) {
+            return 0;
+        }
+        int cols = grid[0].length;
+        int[][] visited = new int[rows][cols];
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1' && visited[i][j] == 0) {
+                    res++;
+                    numIslandsHelper(grid, visited, i, j);
+                }
+            }
+        }
+        return res;
+    }
+
+    public void numIslandsHelper(char[][] grid, int[][] visited, int i, int j) {
+
+        if (i < 0 || i > grid.length - 1) {
+            return;
+        }
+
+        if (j < 0 || j > grid[0].length - 1) {
+            return;
+        }
+
+        if (grid[i][j] == '0' || visited[i][j] == 1) {
+            return;
+        }
+        visited[i][j] = 1;
+
+        numIslandsHelper(grid, visited, i + 1, j);
+        numIslandsHelper(grid, visited, i - 1, j);
+        numIslandsHelper(grid, visited, i, j + 1);
+        numIslandsHelper(grid, visited, i, j - 1);
+    }
 }
 
 
