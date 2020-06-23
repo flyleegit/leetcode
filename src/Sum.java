@@ -3667,6 +3667,65 @@ public class Sum {
         numIslandsHelper(grid, visited, i, j + 1);
         numIslandsHelper(grid, visited, i, j - 1);
     }
+
+    //https://leetcode.com/problems/binary-tree-right-side-view/
+    public List<Integer> rightSideView(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) {
+            return res;
+        }
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+
+            int size = queue.size();
+            for (int i = size; i > 0; i--) {
+                TreeNode tmp = queue.poll();
+
+                if (i == size) {
+                    res.add(tmp.val);
+                }
+
+                if (tmp.right != null) {
+                    queue.offer(tmp.right);
+                }
+
+                if (tmp.left != null) {
+                    queue.offer(tmp.left);
+                }
+            }
+        }
+        return res;
+    }
+
+    //https://leetcode.com/problems/house-robber/
+    public int rob(int[] nums) {
+        int len = nums.length;
+        int res = 0;
+        int[] dp = new int[len];
+
+        if (len == 0) {
+            return res;
+        }
+
+        if (len == 1) {
+            return nums[0];
+        }
+        dp[0] = nums[0];
+        dp[1] = Math.max(dp[0], nums[1]);
+        res = Math.max(dp[1], dp[0]);
+        for (int i = 2; i < len; i++) {
+            dp[i] = Math.max(dp[i - 2] + nums[i], dp[i - 1]);
+            res = Math.max(dp[i], res);
+        }
+        return res;
+    }
+
+    //https://leetcode.com/problems/repeated-dna-sequences/
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> res = new ArrayList<String>();
+        return res;
+    }
 }
 
 
