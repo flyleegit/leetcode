@@ -3726,6 +3726,61 @@ public class Sum {
         List<String> res = new ArrayList<String>();
         return res;
     }
+
+    //https://leetcode.com/problems/reverse-words-in-a-string/
+    //对于有多个空格的，有问题~  需要重新算一下
+    public String reverseWords(String s) {
+        s = s.trim();
+        char[] arr = s.toCharArray();
+        reverseHelper(arr, 0, arr.length - 1);
+        int start = 0, end = 0;
+        while (end < arr.length) {
+            if (arr[end] != ' ') {
+                end++;
+                continue;
+            }
+
+            reverseHelper(arr, start, end - 1);
+            start = end + 1;
+            end++;
+        }
+        reverseHelper(arr, start, end - 1);
+        return new String(arr);
+    }
+
+    public void reverseHelper(char[] input, int start, int end) {
+        while (start <= end) {
+            swap(input, start++, end--);
+        }
+        return;
+    }
+
+    //https://leetcode.com/problems/largest-number/
+    public String largestNumber(int[] nums) {
+        Integer[] ints = new Integer[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            ints[i] = nums[i];
+        }
+
+        Arrays.sort(ints, new Comparator<Integer>() {
+            public int compare(Integer a, Integer b) {
+                String str1 = String.valueOf(a);
+                String str2 = String.valueOf(b);
+                return (str2 + str1).compareTo(str1 + str2);
+            }
+        });
+
+        if (ints[0] == 0) {
+            return "0";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < nums.length; i++) {
+            sb.append(ints[i]);
+        }
+        return new String(sb);
+    }
 }
 
 
