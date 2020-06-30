@@ -3781,6 +3781,11 @@ public class Sum {
         }
         return new String(sb);
     }
+
+    //https://leetcode.com/problems/factorial-trailing-zeroes/
+    public int trailingZeroes(int n) {
+        return 0;
+    }
 }
 
 
