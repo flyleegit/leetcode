@@ -3784,8 +3784,103 @@ public class Sum {
 
     //https://leetcode.com/problems/factorial-trailing-zeroes/
     public int trailingZeroes(int n) {
+        return n < 5 ? 0 : n / 5 + trailingZeroes(n / 5);
+    }
+
+    //https://leetcode.com/problems/majority-element/
+    //[2,2,1,3,1,1,4,1,1,5,1,1,6]
+    public int majorityElement3(int[] nums) {
+        int res = nums[0];
+        int cnt = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int tmp = nums[i];
+            if (tmp == res) {
+                cnt++;
+            } else {
+                cnt--;
+            }
+            if (cnt <= 0) {
+                res = tmp;
+                cnt = 1;
+            }
+        }
+        return res;
+    }
+
+    //https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+    public int[] twoSum2(int[] numbers, int target) {
+        int l = 0, r = numbers.length - 1;
+        while (l < r) {
+            if (numbers[l] + numbers[r] < target) {
+                l++;
+            } else if (numbers[l] + numbers[r] > target) {
+                r--;
+            } else {
+                break;
+            }
+        }
+        return new int[]{l + 1, r + 1};
+    }
+
+    //https://leetcode.com/problems/fraction-to-recurring-decimal/
+    public String fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) {
+            return "0";
+        }
+        StringBuilder fraction = new StringBuilder();
+
+        //只有当一个为正，一个为负
+        //true ^ false = true
+        if (numerator < 0 ^ denominator < 0) {
+            fraction.append("-");
+        }
+
+        //转化成long
+        long dividend = Math.abs(Long.valueOf(numerator));
+        long divisor = Math.abs(Long.valueOf(denominator));
+
+        //小数点前的那一位，直接用除法可以得到
+        fraction.append(String.valueOf(dividend / divisor));
+        long remainder = dividend % divisor;
+
+        //除完余数为0，直接返回，不用计算小数点后面的值
+        if (remainder == 0) {
+            return fraction.toString();
+        }
+        fraction.append(".");
+        Map<Long, Integer> map = new HashMap<>();
+        while (remainder != 0) {
+            if (map.containsKey(remainder)) {
+                fraction.insert(map.get(remainder), "(");
+                fraction.append(")");
+                break;
+            }
+            map.put(remainder, fraction.length());
+            remainder *= 10;
+            fraction.append(String.valueOf(remainder / divisor));
+            remainder %= divisor;
+        }
+        return fraction.toString();
+    }
+
+    //https://leetcode.com/problems/compare-version-numbers/
+    public int compareVersion(String version1, String version2) {
+        String[] str1 = version1.split("\\.");
+        String[] str2 = version2.split("\\.");
+        int i = 0;
+        while (i < str1.length || i < str2.length) {
+            int s1 = i < str1.length ? Integer.valueOf(str1[i]) : 0;
+            int s2 = i < str2.length ? Integer.valueOf(str2[i]) : 0;
+            if (s1 < s2) {
+                return -1;
+            } else if (s1 > s2) {
+                return 1;
+            }
+            i++;
+        }
         return 0;
     }
+
 }
 
 
