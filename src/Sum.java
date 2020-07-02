@@ -3920,6 +3920,7 @@ public class Sum {
             res = Math.max(res,bucketMin[i] - bucketMax[pre]);
             pre = i;
         }
+
         return res;
     }
 
