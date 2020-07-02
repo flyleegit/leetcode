@@ -3881,6 +3881,48 @@ public class Sum {
         return 0;
     }
 
+    //https://leetcode.com/problems/maximum-gap/
+    public int maximumGap(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+
+        int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE, n = nums.length, pre = 0, res = 0;
+        for (int num : nums) {
+            max = Integer.max(max, num);
+            min = Integer.min(min, num);
+        }
+
+        //bucket的大小
+        int size = (max - min) / n + 1;
+
+        //一共有多少个bucket
+        int cnt = (max - min) / size + 1;
+
+        int[] bucketMin = new int[cnt];
+        int[] bucketMax = new int[cnt];
+
+        Arrays.fill(bucketMin, Integer.MAX_VALUE);
+        Arrays.fill(bucketMax, Integer.MIN_VALUE);
+
+        //计算每个bucket内部的最大值和最小值
+        for (int num : nums) {
+            int idx = (num - min) / size;
+            bucketMin[idx] = Math.min(bucketMin[idx], num);
+            bucketMax[idx] = Math.max(bucketMax[idx], num);
+        }
+
+        for (int i = 1; i < cnt; i++) {
+            if (bucketMin[i] == Integer.MAX_VALUE || bucketMax[i] == Integer.MIN_VALUE){
+                continue;
+            }
+
+            res = Math.max(res,bucketMin[i] - bucketMax[pre]);
+            pre = i;
+        }
+        return res;
+    }
+
 }
 
 
