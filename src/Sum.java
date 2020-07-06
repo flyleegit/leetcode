@@ -3913,17 +3913,75 @@ public class Sum {
         }
 
         for (int i = 1; i < cnt; i++) {
-            if (bucketMin[i] == Integer.MAX_VALUE || bucketMax[i] == Integer.MIN_VALUE){
+            if (bucketMin[i] == Integer.MAX_VALUE || bucketMax[i] == Integer.MIN_VALUE) {
                 continue;
             }
 
-            res = Math.max(res,bucketMin[i] - bucketMax[pre]);
+            res = Math.max(res, bucketMin[i] - bucketMax[pre]);
             pre = i;
         }
 
         return res;
     }
 
+    //https://www.cnblogs.com/grandyang/p/5184890.html
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> res = new ArrayList<String>();
+
+        for (int num : nums) {
+            if (lower == num) {
+                lower = num + 1;
+                continue;
+            }
+
+            //现在缺失low ~ num-1
+            String str = "";
+            if (num - 1 > lower) {
+                str = lower + "->" + (num - 1);
+            } else {
+                str = String.valueOf(lower);
+            }
+            lower = num + 1;
+            res.add(str);
+        }
+
+        int last = nums[nums.length - 1];
+        if (upper - last > 2) {
+            String str = "";
+            if (upper - last == 2) {
+                str = String.valueOf(last + 1);
+            } else {
+                str = (last + 1) + "->" + upper;
+            }
+            res.add(str);
+        }
+        return res;
+    }
+
+
+    //https://www.cnblogs.com/grandyang/p/5185561.html
+    //https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        int res = 0, left = 0;
+        HashMap<Character, Integer> hash = new HashMap<Character, Integer>();
+        for (int i = 0; i < s.length(); i++) {
+            Character tmp = s.charAt(i);
+            hash.put(tmp, hash.getOrDefault(tmp, 0) + 1);
+            while (hash.size() > 2) {
+                Character leftChar = s.charAt(left);
+                int cnt = hash.get(leftChar) - 1;
+
+                hash.put(leftChar, cnt);
+
+                if (cnt == 0) {
+                    hash.remove(leftChar);
+                }
+                left++;
+            }
+            res = Math.max(res, i - left + 1);
+        }
+        return res;
+    }
 }
 
 
