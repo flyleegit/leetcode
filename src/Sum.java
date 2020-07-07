@@ -3982,6 +3982,52 @@ public class Sum {
         }
         return res;
     }
+
+
+    public int minDistance2(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] dp = new int[len2 + 1][len1 + 1];
+        for (int i = 0; i <= len1; i++) {
+            dp[0][i] = i;
+        }
+
+        for (int i = 0; i <= len2; i++) {
+            dp[i][0] = i;
+        }
+
+        for (int i = 1; i <= len2; i++) {
+            for (int j = 1; j <= len1; j++) {
+                char s1Char = word1.charAt(j - 1);
+                char s2Char = word2.charAt(i - 1);
+
+                if (s1Char == s2Char) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.min(Math.min(dp[i - 1][j - 1], dp[i - 1][j]), dp[i][j - 1]) + 1;
+                }
+            }
+        }
+        return dp[len2][len1];
+    }
+
+    //https://www.cnblogs.com/grandyang/p/4344107.html
+    //https://leetcode.com/problems/one-edit-distance/
+    public Boolean isOneEditDistance(String s, String t) {
+        int sLen = s.length();
+        int tLen = t.length();
+
+        if ((Math.abs(sLen - tLen) > 1)) {
+            return false;
+        }
+
+        if (sLen > tLen) {
+            return isOneEditDistance(s.substring(0, sLen - 1), t);
+        } else if (sLen < tLen) {
+            return isOneEditDistance(s, t.substring(0, t.length() - 1));
+        }
+        return s.equals(t) ? true : isOneEditDistance(s.substring(0, sLen - 1), t.substring(0, t.length() - 1));
+    }
 }
 
 
