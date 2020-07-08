@@ -4028,6 +4028,86 @@ public class Sum {
         }
         return s.equals(t) ? true : isOneEditDistance(s.substring(0, sLen - 1), t.substring(0, t.length() - 1));
     }
+
+    //https://leetcode.com/problems/evaluate-reverse-polish-notation/
+    public int evalRPN(String[] tokens) {
+        Stack<String> stack = new Stack<String>();
+        for (String str : tokens) {
+            if (str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/")) {
+                int i2 = Integer.valueOf(stack.pop());
+                int i1 = Integer.valueOf(stack.pop());
+                int tmp = 0;
+                switch (str) {
+                    case "+":
+                        tmp = i1 + i2;
+                        break;
+                    case "-":
+                        tmp = i1 - i2;
+                        break;
+                    case "*":
+                        tmp = i1 * i2;
+                        break;
+                    case "/":
+                        tmp = i1 / i2;
+                        break;
+                }
+                stack.push(String.valueOf(tmp));
+            } else {
+                stack.push(str);
+            }
+        }
+        return Integer.valueOf(stack.pop());
+    }
+
+    //https://leetcode.com/problems/sort-list/
+    public ListNode sortList(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode fastHead = head;
+        ListNode slowHead = slow.next;
+
+        slow.next = null;
+
+        fastHead = sortList(fastHead);
+        slowHead = sortList(slowHead);
+        return mergeList(fastHead, slowHead);
+    }
+
+    //merge 两个有序链表
+    public ListNode mergeList(ListNode list1, ListNode list2) {
+
+        ListNode res = new ListNode(-1);
+        ListNode head = res;
+
+        while (list1 != null && list2 != null) {
+
+            if (list1.val > list2.val) {
+                head.next = new ListNode(list2.val);
+                list2 = list2.next;
+            } else {
+                head.next = new ListNode(list1.val);
+                list1 = list1.next;
+            }
+            head = head.next;
+        }
+
+        if (list1 != null) {
+            head.next = list1;
+        }
+
+        if (list2 != null) {
+            head.next = list2;
+        }
+        return res.next;
+    }
+
 }
 
 
