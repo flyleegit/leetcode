@@ -4061,7 +4061,7 @@ public class Sum {
 
     //https://leetcode.com/problems/sort-list/
     public ListNode sortList(ListNode head) {
-        if(head == null || head.next == null){
+        if (head == null || head.next == null) {
             return head;
         }
         ListNode slow = head;
@@ -4104,6 +4104,36 @@ public class Sum {
 
         if (list2 != null) {
             head.next = list2;
+        }
+        return res.next;
+    }
+
+    //https://leetcode.com/problems/insertion-sort-list/
+    public ListNode insertionSortList(ListNode head) {
+
+        //结果链表
+        ListNode res = new ListNode(-1);
+
+        ListNode curr = res;
+
+        while (head != null) {
+
+            ListNode nn = head.next;
+
+            //每次循环进来都把curr置为链表头，最开始的那个
+            curr = res;
+
+            //因为目前res的这个链表是从小到大排列的
+            //这个循环是找到head目前对应的val应该插入到res的哪个节点
+            while (curr.next != null && curr.next.val <= head.val) {
+                curr = curr.next;
+            }
+
+            //找到head应该插入res的哪个节点
+            //在res中进行插入
+            head.next = curr.next;
+            curr.next = head;
+            head = nn;
         }
         return res.next;
     }
