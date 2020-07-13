@@ -1,5 +1,6 @@
 
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -4136,6 +4137,68 @@ public class Sum {
             head = nn;
         }
         return res.next;
+    }
+
+    //https://leetcode.com/problems/binary-tree-preorder-traversal/
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        preorderHelper(root, res);
+        return res;
+    }
+
+    public void preorderHelper(TreeNode root, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+
+        res.add(root.val);
+        preorderHelper(root.left, res);
+        preorderHelper(root.right, res);
+    }
+
+    //https://leetcode.com/problems/binary-tree-postorder-traversal/
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        postorderHelper(root, res);
+        return res;
+    }
+
+    public void postorderHelper(TreeNode root, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+        postorderHelper(root.left, res);
+        postorderHelper(root.right, res);
+        res.add(root.val);
+    }
+
+
+    public List<Integer> postorderTraversal2(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+
+        if (root == null) {
+            return res;
+        }
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode tmp = stack.pop();
+            res.add(tmp.val);
+            if (tmp.left != null) {
+                stack.push(tmp.left);
+            }
+
+            if (tmp.right != null) {
+                stack.push(tmp.right);
+            }
+        }
+
+        List<Integer> rr = new ArrayList<Integer>();
+        for(int i = res.size()-1;i>=0;i--){
+            rr.add(res.get(i));
+        }
+        return rr;
     }
 
 }
