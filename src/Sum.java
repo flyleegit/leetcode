@@ -4195,10 +4195,80 @@ public class Sum {
         }
 
         List<Integer> rr = new ArrayList<Integer>();
-        for(int i = res.size()-1;i>=0;i--){
+        for (int i = res.size() - 1; i >= 0; i--) {
             rr.add(res.get(i));
         }
         return rr;
+    }
+
+    //https://leetcode.com/problems/reorder-list/
+    public void reorderList(ListNode head) {
+        if (head == null) {
+            return;
+        }
+        ListNode fast = head;
+        ListNode slow = head;
+
+        //把ListNode一切为二，从中间拨开
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode firstNode = head;
+        ListNode secondNode = slow.next;
+        slow.next = null;
+
+        //后半段的ListNode翻转
+        ListNode secondRNode = reverseNode(secondNode);
+
+        //后半段的ListNode插入到前半段的ListNode中
+        while (firstNode != null && secondRNode != null) {
+            ListNode tmp1 = firstNode.next;
+            ListNode tmp2 = secondRNode.next;
+            firstNode.next = secondRNode;
+            secondRNode.next = tmp1;
+            secondRNode = tmp2;
+            firstNode = firstNode.next.next;
+        }
+    }
+
+    public ListNode reverseNode(ListNode list) {
+        if (list == null) {
+            return null;
+        }
+        ListNode slow = null;
+        ListNode fast = null;
+        while (list.next != null) {
+            fast = list.next;
+            list.next = slow;
+            slow = list;
+            list = fast;
+        }
+        list.next = slow;
+        return list;
+    }
+
+    //https://leetcode.com/problems/linked-list-cycle-ii/
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                break;
+            }
+        }
+        if (fast == null || fast.next == null) {
+            return null;
+        }
+
+        slow = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return fast;
     }
 
 }
