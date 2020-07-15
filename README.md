@@ -1,4 +1,6 @@
 # leetcode
+[简书地址](https://www.jianshu.com/nb/16075157)
+
 |Num|Link|Answer|
 |---|---|---|
 |159|[Longest Substring with At Most Two Distinct Characters](https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/)|https://github.com/flyleegit/leetcode/issues/1|
@@ -7,3 +9,4 @@
 |148|[Sort List](https://leetcode.com/problems/sort-list/)|https://github.com/flyleegit/leetcode/issues/4|
 |143|[Reorder List](https://leetcode.com/problems/reorder-list/)|https://github.com/flyleegit/leetcode/issues/6|
 |143|[linked-list-cycle-ii](https://leetcode.com/problems/linked-list-cycle-ii/)|https://github.com/flyleegit/leetcode/issues/7|
+|139|[Word Break](https://leetcode.com/problems/word-break/)|https://github.com/flyleegit/leetcode/issues/8|
