@@ -4271,6 +4271,30 @@ public class Sum {
         return fast;
     }
 
+    //https://leetcode.com/problems/word-break/
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<String>(wordDict);
+        // dp[i]表示[0,i)内的子串是否可以拆分
+        // dp的长度比s的长度大1，是为了兼容空字符串的情况
+        Boolean[] dp = new Boolean[s.length() + 1];
+        Arrays.fill(dp, false);
+
+        dp[0] = true;
+
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < i; j++) {
+                //[0,i)内的子串分成两个子串
+                //dp[j]表示[0,j)的子串是否能被拆分
+                //set.contains(s.substring(j, i)) 表示[j,i)的子串是否能被拆分
+                if (dp[j] && set.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
+
 }
 
 
