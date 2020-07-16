@@ -4295,6 +4295,52 @@ public class Sum {
         return dp[dp.length - 1];
     }
 
+    // https://leetcode.com/problems/word-break-ii/
+    // 首先，思路用DFS没问题，所以用DFS 套路 Helper大法没问题
+    // 其次，要想办法解决重复计算，所以 DFS 套路Helper大法有问题，因为没法回溯idx的结果
+    public List<String> wordBreak2(String s, List<String> wordDict) {
+        HashMap<String, List<String>> hash = new HashMap<String, List<String>>();
+        return wordBreak2Helper(s, wordDict, hash);
+    }
+
+
+    // hash就是用来计算子串是否已经计算过
+    // 有一点不一样是，直接从wordDict下手遍历，不是从String遍历
+    public List<String> wordBreak2Helper(String s, List<String> wordDict, HashMap<String, List<String>> hash) {
+
+        List<String> res = new ArrayList<String>();
+        // 已经计算过
+        if (hash.containsKey(s)) {
+            return hash.get(s);
+        }
+
+        // 这个需要给一个结束的条件
+        if (s.isEmpty()) {
+            // 这样写是为了区分返回res为null的情况，
+            // 当无解的时候，这个res return 为null
+            res.add("");
+            return res;
+        }
+
+        for (String word : wordDict) {
+
+            if (!s.startsWith(word)) {
+                continue;
+            }
+
+            List<String> tmpList = wordBreak2Helper(s.substring(word.length()), wordDict, hash);
+            for (String rStr : tmpList) {
+                if (rStr == "") {//只有一种情况会出现这个，那就是~  迭代到了结尾
+                    res.add(word);
+                } else {
+                    res.add(word + " " + rStr);
+                }
+            }
+        }
+        hash.put(s, res);
+        return res;
+    }
+
 }
 
 

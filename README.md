@@ -8,5 +8,6 @@
 |161|[One Edit Distance](https://leetcode.com/problems/one-edit-distance/)|https://github.com/flyleegit/leetcode/issues/3|
 |148|[Sort List](https://leetcode.com/problems/sort-list/)|https://github.com/flyleegit/leetcode/issues/4|
 |143|[Reorder List](https://leetcode.com/problems/reorder-list/)|https://github.com/flyleegit/leetcode/issues/6|
-|143|[linked-list-cycle-ii](https://leetcode.com/problems/linked-list-cycle-ii/)|https://github.com/flyleegit/leetcode/issues/7|
+|142|[linked-list-cycle-ii](https://leetcode.com/problems/linked-list-cycle-ii/)|https://github.com/flyleegit/leetcode/issues/7|
 |139|[Word Break](https://leetcode.com/problems/word-break/)|https://github.com/flyleegit/leetcode/issues/8|
+|140|[Word Break ii](https://leetcode.com/problems/word-break-ii/)|https://github.com/flyleegit/leetcode/issues/9|
