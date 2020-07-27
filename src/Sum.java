@@ -4341,6 +4341,31 @@ public class Sum {
         return res;
     }
 
+    //https://leetcode.com/problems/single-number/
+    public int singleNumber(int[] nums) {
+        int res = 0;
+        //0异或任意一个数字结局都是该数本身~~~~~~~good
+
+        for (int i = 0; i < nums.length; i++) {
+            res = res ^ nums[i];
+        }
+
+        return res;
+    }
+
+    //https://leetcode.com/problems/single-number-ii/
+    public int singleNumber2(int[] nums) {
+        int res = 0;
+        //整形，64位
+        for (int i = 0; i < 64; i++) {
+            int tmp = 0;
+            for (int j = 0; j < nums.length; j++) {
+                tmp += (nums[j] >> i) & 1; //取nums[j]的最低位进行加和
+            }
+            res |= ((tmp % 3) << i);
+        }
+        return res;
+    }
 }
 
 
