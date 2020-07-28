@@ -4366,6 +4366,31 @@ public class Sum {
         }
         return res;
     }
+
+    //https://leetcode.com/problems/candy/
+    public int candy(int[] ratings) {
+        int len = ratings.length;
+        int[] dp = new int[len];
+        Arrays.fill(dp, 1);
+        for (int i = 0; i < len - 1; i++) {
+            if (ratings[i + 1] > ratings[i]) {
+                dp[i + 1] = dp[i] + 1;
+            }
+        }
+
+        for (int i = len - 1; i > 0; i--) {
+            if (ratings[i - 1] > ratings[i]) {
+                dp[i - 1] = Math.max(dp[i - 1], dp[i] + 1);
+//                dp[i - 1] = dp[i] + 1; //这个不对，input 用[1,3,4,5,2] 可以看出端倪
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < len; i++) {
+            res += dp[i];
+        }
+        return res;
+    }
 }
 
 

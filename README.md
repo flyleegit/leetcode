@@ -12,3 +12,4 @@
 |139|[Word Break](https://leetcode.com/problems/word-break/)|https://github.com/flyleegit/leetcode/issues/8|
 |140|[Word Break ii](https://leetcode.com/problems/word-break-ii/)|https://github.com/flyleegit/leetcode/issues/9|
 |137|[Single Number ii](https://leetcode.com/problems/single-number-ii/)|https://github.com/flyleegit/leetcode/issues/10|
+|135|[Candy](https://leetcode.com/problems/candy/)|https://github.com/flyleegit/leetcode/issues/11|
