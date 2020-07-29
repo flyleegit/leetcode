@@ -4391,8 +4391,72 @@ public class Sum {
         }
         return res;
     }
+
+    //https://leetcode.com/problems/gas-station/
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int remain = 0;//油箱剩余的油
+        int len = gas.length;
+
+        //从第一个gas station开始计算，
+        //判断从第i个gas station开始能否周游gas station
+        for (int i = 0; i < len; i++) {
+            remain = 0;
+            int cnt = 0;
+            //从当前station开始遍历
+            //终止条件就是绕了一圈，所以每走一步cnt++，直到cnt ==len
+            for (int j = i; cnt <= len; j = (j + 1) % len, cnt++) {
+                remain += gas[j];
+                remain -= cost[j];
+
+                if (remain < 0) {
+                    break;
+                }
+            }
+            if (remain >= 0) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    //https://leetcode.com/problems/clone-graph/
+    public GNode cloneGraph(GNode node) {
+        HashMap<GNode, GNode> hash = new HashMap<GNode, GNode>();
+        return GNodeHelper(node,hash);
+    }
+
+    public GNode GNodeHelper(GNode node, HashMap<GNode, GNode> hash) {
+        if (node == null) {
+            return null;
+        }
+
+        if (hash.containsKey(node)) {
+            return hash.get(node);
+        }
+
+        GNode clone = new GNode(node.val, new ArrayList<GNode>());
+
+        hash.put(node, clone);
+        for (GNode neighbour : node.neighbors) {
+            clone.neighbors.add(GNodeHelper(neighbour, hash));
+        }
+        return clone;
+    }
 }
 
+class GNode {
+    public int val;
+    public List<GNode> neighbors;
+
+    public GNode() {
+    }
+
+    public GNode(int _val, List<GNode> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
 
 // Definition for a Node.
 class Node {
