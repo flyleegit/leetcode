@@ -4423,7 +4423,7 @@ public class Sum {
     //https://leetcode.com/problems/clone-graph/
     public GNode cloneGraph(GNode node) {
         HashMap<GNode, GNode> hash = new HashMap<GNode, GNode>();
-        return GNodeHelper(node,hash);
+        return GNodeHelper(node, hash);
     }
 
     public GNode GNodeHelper(GNode node, HashMap<GNode, GNode> hash) {
@@ -4443,6 +4443,50 @@ public class Sum {
         }
         return clone;
     }
+
+    //https://leetcode.com/problems/palindrome-partitioning/
+    public List<List<String>> partition(String s) {
+        List<String> item = new ArrayList<String>();
+        List<List<String>> res = new ArrayList<List<String>>();
+
+        if (s == null || s.length() == 0) {
+            return res;
+        }
+        partitionHelper(s, 0, item, res);
+        return res;
+    }
+
+    public void partitionHelper(String s, int start, List<String> out, List<List<String>> res) {
+        if (start == s.length()) {
+            res.add(new ArrayList<String>(out));
+            return;
+        }
+
+        for (int i = start; i < s.length(); i++) {
+            String str = s.substring(start, i + 1);
+
+            if (isPalindrome(str)) {
+                out.add(str);
+                partitionHelper(s, i + 1, out, res);
+                out.remove(out.size() - 1);
+            }
+        }
+    }
+
+    public Boolean isPalindrome2(String str) {
+        int i = 0, j = str.length() - 1;
+        while (i <= j) {
+            if (str.charAt(i++) != str.charAt(j--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //https://leetcode.com/problems/palindrome-partitioning-ii/
+    public int minCut(String s) {
+    }
+
 }
 
 class GNode {
