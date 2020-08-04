@@ -4485,9 +4485,89 @@ public class Sum {
 
     //https://leetcode.com/problems/palindrome-partitioning-ii/
     public int minCut(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+
+        int len = s.length();
+
+        Boolean[][] p = new Boolean[len][len];
+
+        int[] dp = new int[len];
+        for (int i = 0; i < len; i++) {
+            dp[i] = i;
+            for (int j = 0; j <= i; j++) {
+                if (s.charAt(i) == s.charAt(j) && (i - j < 2 || p[j + 1][i - 1])) {
+                    p[j][i] = true;
+                    dp[i] = (j == 0) ? 0 : Math.min(dp[i], dp[j - 1] + 1);
+                }
+            }
+        }
+        return dp[len - 1];
+    }
+
+    //https://leetcode.com/problems/surrounded-regions/
+    public void solve(char[][] board) {
+        if (board == null || board.length <= 1 || board[0].length <= 1) {
+            return;
+        }
+
+        //扫描四条边，如果有O，DFS把跟这个O相连的都变成'#'
+        //剩下的O就都是被包围的，变成'X'即可
+
+        //第一行和最后一行进行fill
+        for (int i = 0; i < board[0].length; i++) {
+            fill(board, 0, i);
+            fill(board, board.length - 1, i);
+        }
+
+        //第一列和最后一列
+        for (int i = 0; i < board.length; i++) {
+            fill(board, i, 0);
+            fill(board, i, board[0].length - 1);
+        }
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+
+    public void fill(char[][] board, int i, int j) {
+        if (i < 0 || i > board.length - 1 || j < 0 || j > board[0].length) {
+            return;
+        }
+        //如果发现O，就DFS周围相邻的O，都变成#
+        if (board[i][j] != 'O') {
+            return;
+        }
+
+        board[i][j] = '#';
+
+        if (i > 0 && board[i - 1][j] == 'O') {
+            fill(board, i - 1, j);
+        }
+
+        if (j < board[i].length - 1 && board[i][j + 1] == 'O') {
+            fill(board, i, j + 1);
+        }
+
+        if (i < board.length - 1 && board[i + 1][j] == 'O') {
+            fill(board, i + 1, j);
+        }
+
+        if (j > 0 && board[i][j - 1] == 'O') {
+            fill(board, i, j - 1);
+        }
     }
 
 }
+
 
 class GNode {
     public int val;
