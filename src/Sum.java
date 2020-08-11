@@ -4566,6 +4566,32 @@ public class Sum {
         }
     }
 
+    //https://leetcode.com/problems/sum-root-to-leaf-numbers/
+    public int sumNumbers(TreeNode root) {
+        return sumNumbersDFS(root, 0);
+    }
+
+    public int sumNumbersDFS(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+
+        //父节点的和值
+        //父节点的值扩大10倍后加上该节点的val
+        sum = sum * 10 + root.val;
+
+        //此节点是叶子节点，直接返回，不进行处理
+        if (root.left == null && root.right == null) {
+            return sum;
+        }
+
+        int leftSum = sumNumbersDFS(root.left, sum);
+
+        int rightSum = sumNumbersDFS(root.right, sum);
+
+        return leftSum + rightSum;
+    }
+
 }
 
 
