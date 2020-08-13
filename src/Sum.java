@@ -4592,6 +4592,29 @@ public class Sum {
         return leftSum + rightSum;
     }
 
+    ////https://leetcode.com/problems/longest-consecutive-sequence/
+    public int longestConsecutive2(int[] nums) {
+        int res = 0;
+        Set<Integer> hashSet = new HashSet<Integer>();
+        for (int num : nums) {
+            hashSet.add(num);
+        }
+
+        for (int num : nums) {
+            if (hashSet.remove(num)) {
+                int pre = num - 1, next = num + 1;
+                while (hashSet.remove(pre)) {
+                    pre--;
+                }
+                while (hashSet.remove(next)) {
+                    next++;
+                }
+                res = Math.max(res, next - pre - 1);
+            }
+        }
+        return res;
+    }
+
 }
 
 
