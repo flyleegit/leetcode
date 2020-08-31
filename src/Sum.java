@@ -4601,6 +4601,7 @@ public class Sum {
         }
 
         for (int num : nums) {
+            // 如果有当前num，remove
             if (hashSet.remove(num)) {
                 int pre = num - 1, next = num + 1;
                 while (hashSet.remove(pre)) {
@@ -4613,6 +4614,38 @@ public class Sum {
             }
         }
         return res;
+    }
+
+    public int ladderLength3(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<String>(wordList);
+        Queue<String> queue = new LinkedList<String>();
+        queue.offer(beginWord);
+        int res = 0;
+        while (!queue.isEmpty()) {
+
+            // 一层一层来
+            for (int k = queue.size(); k > 0; k--) {
+                String word = queue.poll();
+                if (word.equals(endWord)) {
+                    return res + 1;
+                }
+                for (int i = 0; i < word.length(); i++) {
+                    char[] charArray = word.toCharArray();
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
+
+                        charArray[i] = ch;
+                        String newString = new String(charArray);
+                        // 变化后的word在set中，但是还未到终点
+                        if (set.contains(newString) && newString != word) {
+                            queue.offer(newString);
+                            set.remove(newString);
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return 0;
     }
 
 }

@@ -17,3 +17,5 @@
 |131|[Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)|https://github.com/flyleegit/leetcode/issues/13|
 |130|[Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)|https://github.com/flyleegit/leetcode/issues/14|
 |129|[Sum Root to Leaf Numbers](https://leetcode.com/problems/sum-root-to-leaf-numbers/)|https://github.com/flyleegit/leetcode/issues/15|
+|128|[Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)|https://github.com/flyleegit/leetcode/issues/16|
+|127|[Word Ladder](https://leetcode.com/problems/word-ladder/)|https://github.com/flyleegit/leetcode/issues/17|
