@@ -4648,6 +4648,27 @@ public class Sum {
         return 0;
     }
 
+    //https://leetcode.com/problems/binary-tree-maximum-path-sum/
+    int maxRes = 0;
+
+    public int maxPathSum2(TreeNode root) {
+        maxRes = root == null ? 0 : root.val;
+        maxPathSum2Helper(root);
+        return maxRes;
+    }
+
+    public int maxPathSum2Helper(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int leftMax = Math.max(maxPathSum2Helper(root.left), 0);
+
+        int rightMax = Math.max(maxPathSum2Helper(root.right), 0);
+        maxRes = Math.max(leftMax + rightMax + root.val, maxRes);
+        return Math.max(leftMax, rightMax) + root.val;
+    }
+
 }
 
 
