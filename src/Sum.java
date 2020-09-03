@@ -4669,6 +4669,95 @@ public class Sum {
         return Math.max(leftMax, rightMax) + root.val;
     }
 
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+    public int maxProfit3(int[] prices) {
+        if (prices.length == 0) {
+            return 0;
+        }
+        int buyPrice = prices[0];
+        int maxRes = 0;
+        for (int i = 0; i < prices.length; i++) {
+            int selPrice = prices[i];
+            maxRes = Math.max(maxRes, selPrice - buyPrice);
+            buyPrice = Math.min(selPrice, buyPrice);
+        }
+        return maxRes;
+    }
+
+    //https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+    public int maxProfit4(int[] prices) {
+        if (prices.length == 0) {
+            return 0;
+        }
+        int buy = prices[0];
+        int res = 0;
+
+        for (int i = 0; i < prices.length; i++) {
+            int now = prices[i];
+            if (now < buy) {
+                buy = now;
+            } else {
+                res += (now - buy);
+                buy = now;
+            }
+        }
+        return res;
+    }
+
+    // https://leetcode.com/problems/triangle/
+    public int minimumTotal2(List<List<Integer>> triangle) {
+
+        for (int i = 1; i < triangle.size(); i++) {
+            List<Integer> row = triangle.get(i);
+            for (int j = 0; j < row.size(); j++) {
+                // 上一行相邻的最小值
+                int lastRowLeft = Integer.MAX_VALUE;
+                int lastRowRight = Integer.MAX_VALUE;
+                if (j - 1 >= 0) {
+                    lastRowLeft = triangle.get(i - 1).get(j - 1);
+                }
+
+                if (j < triangle.get(i - 1).size()) {
+                    lastRowRight = triangle.get(i - 1).get(j);
+                }
+                int lastRowMin = Math.min(lastRowRight, lastRowLeft);
+                int val = row.get(j) + lastRowMin;
+                row.set(j, val);
+            }
+        }
+        int min = Collections.min(triangle.get(triangle.size() - 1));
+        return min;
+    }
+
+    // https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+    public Node connect3(Node root) {
+        Node res = root;
+        if (root == null) {
+            return root;
+        }
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            Node node = queue.poll();
+            if (node.left != null) {
+                queue.offer(node.left);
+                queue.offer(node.right);
+            }
+            size--;
+            while (size > 0) {
+                Node nextNode = queue.poll();
+                node.next = nextNode;
+                node = nextNode;
+                if (node.left != null) {
+                    queue.offer(node.left);
+                    queue.offer(node.right);
+                }
+                size--;
+            }
+        }
+        return res;
+    }
 }
 
 
