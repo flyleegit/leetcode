@@ -20,3 +20,5 @@
 |128|[Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)|https://github.com/flyleegit/leetcode/issues/16|
 |127|[Word Ladder](https://leetcode.com/problems/word-ladder/)|https://github.com/flyleegit/leetcode/issues/17|
 |124|[Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)|https://github.com/flyleegit/leetcode/issues/18|
+|115|[Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/)|https://github.com/flyleegit/leetcode/issues/19|
+|114|[Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/)|https://github.com/flyleegit/leetcode/issues/20|

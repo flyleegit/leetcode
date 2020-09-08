@@ -4758,6 +4758,63 @@ public class Sum {
         }
         return res;
     }
+
+    // https://leetcode.com/problems/distinct-subsequences/
+    public int numDistinct2(String s, String t) {
+        int[][] dp = new int[t.length() + 1][s.length() + 1];
+
+        for (int i = 0; i <= dp[0].length; i++) {
+            dp[0][i] = 1;
+        }
+
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp[0].length; j++) {
+                dp[i][j] = dp[i][j - 1] + (t.charAt(i - 1) == s.charAt(j - 1) ? dp[i - 1][j - 1] : 0);
+            }
+        }
+        return dp[t.length()][s.length()];
+    }
+
+    // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+
+    // 这个为什么不能AC？？？？？？？？？
+    TreeNode res = new TreeNode(-1);
+    TreeNode tmp = res;
+
+    public void flatten2(TreeNode root) {
+        preO(root);
+        root = res.right;
+    }
+
+    public void preO(TreeNode root) {
+        tmp.right = new TreeNode(root.val);
+        tmp = tmp.right;
+        if (root.left != null) {
+            preO(root.left);
+        }
+
+        if (root.right != null) {
+            preO(root.right);
+        }
+    }
+
+    public void flatten3(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        flatten3(root.left);
+        flatten3(root.right);
+
+        TreeNode right = root.right;
+        TreeNode tmp = root;
+        root.right = root.left;
+        root.left = null;
+        while (tmp.right != null) {
+            tmp = tmp.right;
+        }
+        tmp.right = right;
+    }
+
 }
 
 
