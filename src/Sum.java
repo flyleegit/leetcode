@@ -4815,6 +4815,65 @@ public class Sum {
         tmp.right = right;
     }
 
+    //https://leetcode.com/problems/path-sum-ii/
+    public List<List<Integer>> pathSum2(TreeNode root, int sum) {
+        List<Integer> out = new ArrayList<Integer>();
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        pathSum2Helper(root, sum, out, res);
+        return res;
+    }
+
+    public void pathSum2Helper(TreeNode root, int sum, List<Integer> out, List<List<Integer>> res) {
+        if (root == null) {
+            return;
+        }
+
+        int val = root.val;
+
+        if (val == sum && root.left == null && root.right == null) {
+            out.add(val);
+            res.add(new ArrayList<Integer>(out));
+            out.remove(out.size() - 1);
+            return;
+        }
+        out.add(val);
+        pathSum2Helper(root.left, sum - val, out, res);
+        pathSum2Helper(root.right, sum - val, out, res);
+        out.remove(out.size() - 1);
+    }
+
+    // https://leetcode.com/problems/path-sum/
+    public boolean hasPathSum2(TreeNode root, int sum) {
+        if (root == null) {
+            return false;
+        }
+
+        if ((root.val == sum) && (root.left == null) && (root.right == null)) {
+            return true;
+        }
+        return hasPathSum2(root.left, sum - root.val) || hasPathSum2(root.right, sum - root.val);
+    }
+
+    // https://leetcode.com/problems/minimum-depth-of-binary-tree/
+    public int minDepth2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        if (root.left == null) {
+            return 1 + minDepth(root.right);
+        }
+
+        if (root.right == null) {
+            return 1 + minDepth(root.left);
+        }
+        return 1 + Math.min(minDepth(root.left), minDepth(root.right));
+    }
+
+    // https://leetcode.com/problems/balanced-binary-tree/
+    public boolean isBalanced(TreeNode root) {
+
+    }
 }
 
 
