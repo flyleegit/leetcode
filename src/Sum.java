@@ -4872,7 +4872,95 @@ public class Sum {
 
     // https://leetcode.com/problems/balanced-binary-tree/
     public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
 
+        return (Math.abs(treeHeight(root.left) - treeHeight(root.right)) <= 1) && isBalanced(root.left) && isBalanced(root.right);
+    }
+
+    public int treeHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.max(treeHeight(root.left), treeHeight(root.right)) + 1;
+    }
+
+    // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+    public TreeNode sortedArrayToBST2(int[] nums) {
+        if (nums.length == 0) {
+            return null;
+        }
+        int len = nums.length;
+        TreeNode root = new TreeNode(nums[len / 2]);
+        int[] leftNums = Arrays.copyOfRange(nums, 0, len / 2);
+        int[] rightNums = Arrays.copyOfRange(nums, len / 2 + 1, len);
+        root.left = sortedArrayToBST2(leftNums);
+        root.right = sortedArrayToBST2(rightNums);
+        return root;
+    }
+
+    // https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+    public TreeNode sortedListToBST2(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+
+            slow = slow.next;
+        }
+
+        TreeNode root = new TreeNode(slow.val);
+        ListNode rightList = slow.next;
+
+        slow.next = null; //左右切断
+
+        // 找左边,切断左list和slow节点
+        ListNode leftList = head;
+        while (head != slow && leftList.next != slow) {
+            leftList = leftList.next;
+        }
+        leftList.next = null;
+        if (head == slow) {
+            head = null;
+        }
+
+        TreeNode leftTree = sortedListToBST2(head);
+        TreeNode rightTree = sortedListToBST2(rightList);
+        root.left = leftTree;
+        root.right = rightTree;
+        return root;
+    }
+
+    // https://leetcode.com/problems/binary-tree-level-order-traversal-ii/
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+
+        if (root == null) {
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            List<Integer> list = new ArrayList<Integer>();
+            for (int i = queue.size(); i > 0; i--) {
+                TreeNode tmp = queue.poll();
+                list.add(tmp.val);
+                if (tmp.left != null) {
+                    queue.offer(tmp.left);
+                }
+
+                if (tmp.right != null) {
+                    queue.offer(tmp.right);
+                }
+            }
+            res.add(list);
+        }
+        Collections.reverse(res);
+        return res;
     }
 }
 
