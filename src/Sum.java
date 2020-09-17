@@ -4962,6 +4962,101 @@ public class Sum {
         Collections.reverse(res);
         return res;
     }
+
+    // https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+    // inorder 中序遍历
+    // postorder 后续遍历
+    public TreeNode buildTree2(int[] inorder, int[] postorder) {
+        return buildTree2Helper(inorder, postorder, 0, inorder.length - 1, 0, postorder.length - 1);
+    }
+
+    public TreeNode buildTree2Helper(int[] inorder, int[] postorder, int inStart, int inEnd, int postStart, int postEnd) {
+        if (inStart < 0 || inStart > inorder.length - 1) {
+            return null;
+        }
+
+        if (postStart < 0 || postStart > postorder.length - 1) {
+            return null;
+        }
+
+        if (inStart > inEnd || postStart > postEnd) {
+            return null;
+        }
+
+
+        int rootVal = postorder[postEnd];
+        TreeNode root = new TreeNode(rootVal);
+
+        if (inStart == inEnd) {
+            return root;
+        }
+        int i = inStart;
+        for (; i <= inEnd; i++) {
+            if (inorder[i] == rootVal) {
+                break;
+            }
+        }
+
+        root.left = buildTree2Helper(inorder, postorder, inStart, i - 1, postStart, postStart + i - inStart - 1);
+        root.right = buildTree2Helper(inorder, postorder, i + 1, inEnd, postStart + i - inStart, postEnd - 1);
+        return root;
+    }
+
+    // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+    // 先序遍历和中序遍历
+    public TreeNode buildTree4(int[] preorder, int[] inorder) {
+        return buildTree4Helper(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
+    }
+
+    public TreeNode buildTree4Helper(int[] preorder, int[] inorder, int preStart, int preEnd, int inStart, int inEnd) {
+        if (preStart > preEnd || inStart > inEnd) {
+            return null;
+        }
+
+        int rootVal = preorder[preStart];
+
+        TreeNode root = new TreeNode(rootVal);
+
+        int i = inStart;
+        for (; i <= inEnd; i++) {
+            if (inorder[i] == rootVal) {
+                break;
+            }
+        }
+        root.left = buildTree4Helper(preorder, inorder, preStart + 1, preStart + i - inStart, inStart, i - 1);
+        root.right = buildTree4Helper(preorder, inorder, preStart + i - inStart + 1, preEnd, i + 1, inEnd);
+        return root;
+    }
+
+    // https://leetcode.com/problems/symmetric-tree/
+    public boolean isSymmetric4(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            List<Integer> list = new ArrayList<Integer>();
+            for (int i = queue.size(); i > 0; i--) {
+                TreeNode tmp = queue.poll();
+
+                if (tmp != null) {
+                    queue.offer(tmp.left);
+                    queue.offer(tmp.right);
+                    list.add(tmp.val);
+                } else {
+                    list.add(null);
+                }
+            }
+
+            int i = 0, j = list.size() - 1;
+            while (i <= j) {
+                if (list.get(i) != list.get(j)) {
+                    return false;
+                }
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
 }
 
 
