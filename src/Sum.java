@@ -5057,6 +5057,81 @@ public class Sum {
         }
         return true;
     }
+
+    // https://leetcode.com/problems/same-tree/
+    public boolean isSameTree2(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+
+        if (p == null || q == null) {
+            return false;
+        }
+        if (p.val != q.val) {
+            return false;
+        }
+
+        return isSameTree2(p.left, q.left) && isSameTree2(p.right, q.right);
+    }
+
+    // https://leetcode.com/problems/validate-binary-search-tree/
+    public boolean isValidBST2(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        inorderHelper2(root, res);
+        for (int i = 0; i < res.size() - 1; i++) {
+            if (i + 1 < res.size() && res.get(i) >= res.get(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void inorderHelper2(TreeNode root, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+        if (root.left != null) {
+            inorderHelper2(root.left, res);
+
+        }
+        res.add(root.val);
+
+        if (root.right != null) {
+            inorderHelper2(root.right, res);
+        }
+    }
+
+    // https://leetcode.com/problems/unique-binary-search-trees-ii/
+    public List<TreeNode> generateTrees2(int n) {
+        List<TreeNode> res = new ArrayList<TreeNode>();
+        if (n == 0) {
+            return res;
+        }
+        res = generateTrees2Helper(1, n);
+        return res;
+    }
+
+    public List<TreeNode> generateTrees2Helper(int left, int right) {
+        List<TreeNode> res = new ArrayList<TreeNode>();
+
+        if (left > right) {
+            res.add(null);
+            return res;
+        }
+        for (int i = left; i <= right; i++) {
+            List<TreeNode> leftList = generateTrees2Helper(left, i - 1);
+            List<TreeNode> rightList = generateTrees2Helper(i + 1, right);
+            for (int j = 0; j < leftList.size(); j++) {
+                for (int k = 0; k < rightList.size(); k++) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = leftList.get(j);
+                    root.right = rightList.get(k);
+                    res.add(root);
+                }
+            }
+        }
+        return res;
+    }
 }
 
 
