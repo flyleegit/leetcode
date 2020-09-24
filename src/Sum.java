@@ -5132,6 +5132,47 @@ public class Sum {
         }
         return res;
     }
+
+    // https://leetcode.com/problems/restore-ip-addresses/
+    public List<String> restoreIpAddresses2(String s) {
+        List<String> out = new ArrayList<String>();
+        List<List<String>> res = new ArrayList<List<String>>();
+        restoreIpAddresses2Helper(s, out, res);
+        List<String> ll = new ArrayList<String>();
+
+
+        for (List<String> info : res) {
+            String[] tmp = info.toArray(new String[info.size()]);
+            ll.add(String.join(".", tmp));
+        }
+        return ll;
+    }
+
+    public void restoreIpAddresses2Helper(String s, List<String> out, List<List<String>> res) {
+        if (out.size() == 4) {
+            if (s.equals("")) {
+                res.add(new ArrayList<String>(out));
+            }
+            return;
+        }
+
+        for (int i = 1; i <= Math.min(3, s.length()); i++) {
+            String tmp = s.substring(0, i);
+
+            // 0开头的两位、三位数字不要了
+            if (i > 1 && s.startsWith("0")) {
+                break;
+            }
+
+            // 大于255 不要了
+            if (Integer.valueOf(tmp) > 255) {
+                break;
+            }
+            out.add(tmp);
+            restoreIpAddresses2Helper(s.substring(i), out, res);
+            out.remove(out.size() - 1);
+        }
+    }
 }
 
 
